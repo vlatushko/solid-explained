@@ -7,6 +7,7 @@ This example has the following structure:
     * TooMuchSeparation 
 * CorrectUsage
     * to be added...
+* SRPExample.cs (shows usage of services from each approach)
 
 ### Each example explained
 #### Violation
@@ -41,4 +42,31 @@ Let's see what pros and cons this approach has.
 * It simply inconvenient to work with such amount of classes as you need to have the open;
 * If a feature is pretty big - it becomes hard to create a mental picture of how it works in general;
 * It forces to duplicate some common logic or creating another additional base class for it;
+* You still need some state for the Logging Service (moreover the same state for all of the services);
 
+#### Correct Usage
+
+As you may notice, we still needed to create 8 files in general (4 interfaces and 4 classes). It may look as if we separate it too much, but let's evaluate pros and cons of this approach.
+
+**Pros:**
+* You don't need any state in the `LoggingService` class;
+* Instead of injecting three different logging services (`IInfoLoggingService`, `IWarningLoggingService` and `IErrorLoggingService`) you inject the single `ILoggingService` interface
+* Where to store the logs is now a responsibility of a config class, we just inject the `ILogger` interface for the `ILoggerService` and that's it!
+* All related logic is in the same class (`LogInfo()`, `LogWarning()` and `LogError()` methods are all in the same place);
+* You can add new types of loggers without modifying any of the existing classes. For instance, if we needed to create logger to Elastisearch we would create two files: interface `IElasticsearchLogger` and class `ElasticSearchLogger` that implements it, then just configure where to log somewhere in a configurator!
+* Different developers can work on each type of logger;
+* It's easy to Unit Test all of the classes here
+
+**Cons:**
+* Requires to add 8 (in this example) files in total;
+
+### Conclusion
+As you may notice, everything in this world should be in balance.
+
+Too little separation of concerns (SOC) requires more efforts and branching logic to work correctly.
+
+Too much SOC requires more effort to create a lot of different files, still requires storing some state in the services and is hard to understand in case with big services.
+
+The correct usage example still requires many files to create, but has explicit advantages in usage and maintainability of the system.
+
+P.S. If you notice any mistakes or I have explained something incorrectly - please, feel free to comment, I would be happy to discuss and understand my mistakes!

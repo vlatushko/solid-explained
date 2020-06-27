@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace solid_explained
+﻿namespace solid_explained
 {
     class Program
     {
