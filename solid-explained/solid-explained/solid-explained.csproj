@@ -6,4 +6,8 @@
         <RootNamespace>solid_explained</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="OCP\CorrectUsage" />
+    </ItemGroup>
+
 </Project>

@@ -6,7 +6,6 @@ This example has the following structure:
     * TooLittleSeparation
     * TooMuchSeparation 
 * CorrectUsage
-    * to be added...
 * SRPExample.cs (shows usage of services from each approach)
 
 ### Each example explained
@@ -18,7 +17,7 @@ or to a database.
 Having everything in one class leads to the following problems:
 * There potentially will be too much dependencies on this class in a big project;
 * You have several reasons to change the class, which may lead to errors;
-* Additional state add more complexity to managing the class, just imagine how the class would look like if you were to be logging to 10 different types of storage...;
+* Additional state adds more complexity to managing the class, just imagine how the class would look like if you were to be logging to 10 different types of storage...;
 * This class is hard to unit test;
 
 The only advantage of such an approach I can see is that it's easy to understand what this class does. Although, it's only in case
@@ -37,9 +36,9 @@ Let's see what pros and cons this approach has.
 **Cons:**
 * Using those classes is cumbersome because if you need to log all types you would need to inject all the intefaces (`IInfoLoggingService`, `IWarningLoggingService` and `IErrorLoggingService`);
 * Having to setup the Dependency Injection for these classes will take more time;
-* Adding new features to loggin in general involves editing more classes;
+* Adding new features to logging in general involves editing more classes;
 * Creating all of those classes felt dummy for me;
-* It simply inconvenient to work with such amount of classes as you need to have the open;
+* It simply inconvenient to work with such amount of classes as you need to have them all open;
 * If a feature is pretty big - it becomes hard to create a mental picture of how it works in general;
 * It forces to duplicate some common logic or creating another additional base class for it;
 * You still need some state for the Logging Service (moreover the same state for all of the services);
