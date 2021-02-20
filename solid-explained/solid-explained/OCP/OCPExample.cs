@@ -1,36 +1,58 @@
-using solid_explained.OCP.Violation;
-
 namespace solid_explained.OCP
 {
     public class OCPExample
     {
-        private readonly CommandsRunner _commandsRunner;
+        // fields for violation demo
+        private readonly Violation.CommandsRunner _violatedCommandsRunner;
+
+        //fields for correct usage demo
+        private readonly CorrectUsage.CommandsRunner _correctCommandsRunner;
+        private readonly CorrectUsage.CommandsFactory _commandsFactory;
 
         public OCPExample()
         {
-            _commandsRunner = new CommandsRunner();
+            //*** This is an example of the OCP violation usage ***
+
+            _violatedCommandsRunner = new Violation.CommandsRunner();
 
             Undo();
             Redo();
             PrepareLogFile();
+
+            // ****************************************************
+
+            //*** This is an example of the OCP correct usage ***
+            _correctCommandsRunner = new CorrectUsage.CommandsRunner();
+            _commandsFactory = new CorrectUsage.CommandsFactory();
+
+            var redoCommand = _commandsFactory.CreateCommand(CorrectUsage.CommandType.Redo);
+            var undoCommand = _commandsFactory.CreateCommand(CorrectUsage.CommandType.Undo);
+            var prepareLogCommand = _commandsFactory.CreateCommand(CorrectUsage.CommandType.PrepareLog);
+
+            _correctCommandsRunner.RunCommand(redoCommand);
+            _correctCommandsRunner.RunCommand(undoCommand);
+            _correctCommandsRunner.RunCommand(prepareLogCommand);
+
+            // ****************************************************
         }
 
+        //methods for violation demo
         private void Undo()
         {
-            UndoCommand command = new UndoCommand();
-            _commandsRunner.RunCommand(command);
+            Violation.UndoCommand command = new Violation.UndoCommand();
+            _violatedCommandsRunner.RunCommand(command);
         }
 
         private void Redo()
         {
-            RedoCommand command = new RedoCommand();
-            _commandsRunner.RunCommand(command);
+            Violation.RedoCommand command = new Violation.RedoCommand();
+            _violatedCommandsRunner.RunCommand(command);
         }
 
         private void PrepareLogFile()
         {
-            PrepareLogFileCommand command = new PrepareLogFileCommand();
-            _commandsRunner.RunCommand(command);
+            Violation.PrepareLogFileCommand command = new Violation.PrepareLogFileCommand();
+            _violatedCommandsRunner.RunCommand(command);
         }
     }
 }

@@ -6,7 +6,6 @@ namespace solid_explained.SRP
     {
         public SRPExample()
         {
-
             //en example of configuration of the approach from Too Little Separation
             const bool logToFile = false;
             const bool logToDatabase = true;
