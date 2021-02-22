@@ -71,6 +71,6 @@ added command without modifying it.
  
  When we apply Open Closed Principle while working on software, it may take more time to 
  implement, but will pay off in the future. Yes, it will require better planning for a developer 
- before starting to work on a feature, but anyway, the code will be more reliable. 
+ before starting to work on a feature, but anyway, the code will be more reliable.
  
  P.S. If you see any errors or improvements to my explanation, please, leave comments and let's discuss it ;)
