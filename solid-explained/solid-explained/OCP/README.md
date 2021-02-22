@@ -8,11 +8,56 @@
  #### Violation
  The violation example consists of four classes:
  * `CommandsRunner` (a public interface for some other modules or something...)
+```c#
+    //the CommandsRunner class is open for modification (but should be closed)
+    // and closed for extension as we wouldn't be able to add a new command
+    // without modifying this class
+    public class CommandsRunner
+    {
+        //each time you add a new command - you need to modify this method
+        public void RunCommand(object command)
+        {
+            if (command is UndoCommand undoCommand)
+                undoCommand.Execute();
+            else if(command is RedoCommand redoCommand)
+                redoCommand.Execute();
+            else if(command is PrepareLogFileCommand prepareLogFileCommand)
+                prepareLogFileCommand.Execute();
+        }
+    }
+```
  * `PrepareLogFileCommand`
+    ```c#
+    public class PrepareLogFileCommand
+    {
+        public void Execute()
+        {
+            Console.WriteLine("Prepare log file command executed");
+        }
+    }
+    ```
  * `RedoCommand`
+     ```c#
+    public class RedoCommand
+    {
+        public void Execute()
+        {
+            Console.WriteLine("Redo command executed");
+        }
+    }
+    ```
  * `UndoCommand`
+     ```c#
+    public class UndoCommand
+    {
+        public void Execute()
+        {
+            Console.WriteLine("Undo command executed");
+        }
+    }
+    ```
  
- If you take a look at the `CommandsRunner`, it has a single method `RunCommand(object command)`
+ If you take a look at the `CommandsRunner`, it has a single method `void RunCommand(object command)`
  with the switch statement having all types of commands. Each time we need to add a new command to the project
  we will have to modify this method by adding the new case to the switch statement. It violates the Open Closed
  Principle as we modify the class which should be closed for modification and open for extension.
@@ -36,16 +81,98 @@
 The correct usage example consists of the following files:
 * Interfaces
     * `ICommandsRunner`
-    * `ICommand`
+        ```c#
+        public interface ICommandsRunner
+        {
+            void RunCommand(ICommand command);
+        }
+        ```
+   * `ICommand`
+        ```c#
+        public interface ICommand
+        {
+            void Execute();
+        }
+        ```
     * `ICommandsFactory`
+        ```c#
+        public interface ICommandsFactory
+        {
+            ICommand CreateCommand(CommandType commandType);
+        }
+        ```
 * Enums
     * `CommandType`
+        ```c#
+        public enum CommandType
+        {
+            Undo = 0,
+            Redo = 1,
+            PrepareLog = 2
+        }
+        ```
 * Classes
     * `CommandsRunner`
+        ```c#
+        //As you can see, this class doesn't require to be modified to run new commands (closed for modification)
+        // and can be extended if necessary (open for extension)
+        public class CommandsRunner : ICommandsRunner
+        {
+            public void RunCommand(ICommand command)
+            {
+                if (command == null)
+                    throw new ArgumentNullException($"The {nameof(command)} is null. Terminating...");
+        
+                command.Execute();
+            }
+        }
+        ```
     * `CommandsFactory`
+        ```c#
+        public class CommandsFactory : ICommandsFactory
+        {
+            public ICommand CreateCommand(CommandType commandType)
+            {
+                return commandType switch
+                {
+                    CommandType.Undo => new UndoCommand(),
+                    CommandType.Redo => new RedoCommand(),
+                    CommandType.PrepareLog => new PrepareLogFileCommand(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(commandType), commandType, null)
+                };
+            }
+        }
+        ```
     * `RedoCommand`
+        ```c#
+        public class RedoCommand : ICommand
+        {
+            public void Execute()
+            {
+                Console.WriteLine("Redo command is executed.");
+            }
+        }
+        ```
     * `UndoCommand`
+        ```c#
+        public class UndoCommand : ICommand
+        {
+            public void Execute()
+            {
+                Console.WriteLine("Undo command is executed.");
+            }
+        }
+        ```
     * `PrepareLogFileCommand`
+        ```c#
+        public class PrepareLogFileCommand : ICommand
+        {
+            public void Execute()
+            {
+                Console.WriteLine("PrepareLog command is executed.");
+            }
+        }
+        ```
 
 In the correct usage example we see three abstractions added (interfaces) which make the
 application highly customizable, testable and maintainable. To extend the functionality
